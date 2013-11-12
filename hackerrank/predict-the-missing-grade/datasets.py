@@ -19,7 +19,7 @@ def get_y(data):
             y=data[key]
     return y
 
-def load_data(filename):
+def load_training_data(filename):
     X=[];Y=[]
     f=open(filename,"r")
     nline=int(f.readline())
@@ -27,6 +27,17 @@ def load_data(filename):
         data=json.loads(f.readline())
         X.append(get_x(data))
         Y.append(get_y(data))
+    return (X,Y)
+
+def load_test_data(xfilename,yfilename):
+    X=[];Y=[]
+    fx=open(xfilename,"r")
+    fy=open(yfilename,"r")
+    nline=int(fx.readline())
+    for i in xrange(nline):
+        data=json.loads(fx.readline())
+        X.append(get_x(data))
+        Y.append(int(fy.readline()))
     return (X,Y)
 
 def load_input():

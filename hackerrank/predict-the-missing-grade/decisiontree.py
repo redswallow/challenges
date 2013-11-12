@@ -1,21 +1,19 @@
 #!/usr/bin/env python
-from datasets import load_data
-from scipy.stats import nanmean
-import numpy as np
+from datasets import load_training_data,load_test_data
+from preprocessing import fill_missing_values
 
 """ get training data """
-Xtr,Ytr=load_data("data/training.json")
-""" remove NAN from data """
-mean=nanmean(Xtr,axis=0)
-for rows in xrange(len(Xtr)):
-    for cols in xrange(len(Xtr[rows])):
-        if np.isnan(Xtr[rows][cols]):
-            Xtr[rows][cols]=mean[cols]
+Xtr,Ytr=load_training_data("data/training.json")
+Xtr=fill_missing_values(Xtr)
+
+""" get test data """
+Xte,Yte=load_test_data("data/sample-test.in.json","data/sample-test.out.json")
+Xte=fill_missing_values(Xte)
 
 """training"""
 from sklearn.tree import DecisionTreeClassifier
-learner = DecisionTreeClassifier(max_depth=None,random_state=0).fit(Xtr, Ytr)
+learner = DecisionTreeClassifier(max_depth=7,random_state=0).fit(Xtr, Ytr)
 
 """predicting"""
-Yhat=learner.predict(Xtr)
 print learner.score(Xtr,Ytr)
+print learner.score(Xte,Yte)
